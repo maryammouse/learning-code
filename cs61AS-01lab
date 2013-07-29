@@ -1,0 +1,34 @@
+The Fizzbuzz Procedure: 
+
+;;Exercise 3b - final answer
+
+ (define (fizzbuzz n)
+       (cond 
+            ((equal? (remainder n 3) 0)
+              (cond ((equal? (remainder n 5) 0)
+                       (word 'fizzbuzz))
+                          (else (word 'fizz))))
+         ((equal? (remainder n 5) 0)
+         (word 'buzz))
+         (else (+ n))))
+
+
+;;Exercise 3b - previous attempts
+
+(define (fizzbuzz n)
+  '(YOUR CODE HERE)
+)
+(define (fizzbuzz n) 
+ (if (equal? (remainder n 3) 0)
+       (word 'fizz)
+       (+ n)))
+       
+       
+ (if (equal? (remainder n 5) 0)
+     (word 'buzz)
+     (* 1 n))
+ (if (equal? (remainder n 5) 0) and (equal? (remainder n 3) 0)
+     (word 'fizzbuzz)
+     (* 1 n)))
+   
+
