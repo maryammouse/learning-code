@@ -1,0 +1,204 @@
+;; Real Exercises
+
+;;4.4  Each of the following procedure definitions 
+has an error of some kind. Say what's wrong and 
+why, and fix it:
+
+(define (sphere-volume r)
+  (* (/ 4 3) 3.141592654)
+  (* r r r))
+
+;; What is wrong as that there are two expressions 
+that define the procedure. They are meant to be 
+only one expression but as is Scheme sees them as 
+two.
+
+;;Fixed version: 
+
+(define (sphere-volume r)
+(* (/ 4 3) 3.141592654 (* r r r)))
+
+
+
+(define (next x)
+  (x + 1))
+
+;; The expression defining the procedure is not 
+written as a Scheme procedure. 
+
+;;Fixed version: 
+
+(define (next x)
+(+ x 1))
+
+
+
+(define (square)
+  (* x x))
+
+;; The variable x is not defined and thus x is 
+unbound.
+
+;;Fixed version: 
+
+(define (square x)
+(* x x))
+
+
+
+(define (triangle-area triangle)
+  (* 0.5 base height))
+
+;; base and height are variables that are unbound 
+because they aren't defined along with triangle-
+area and triangle. They should either be defined 
+with the first two variables or be defined alone. 
+Also, it is unclear what sort of value "triangle" 
+would have anyway, as a triangle is a shape.
+
+;;Fixed version: 
+
+(define (triangle-area base height)
+  (* 0.5 base height))
+
+
+
+
+(define (sum-of-squares (square x) (square y))
+  (+ (square x) (square y)))
+
+;; The problem here is that there is a procedure 
+within a procedure that requires the input of 
+specific variables. Unless square x and square y 
+are defined as constants, this procedure will fail. 
+The sum-of-squares procedure input values cannot be 
+procedures, though the expression can use pre-
+defined procedures.
+
+;;Fixed version:
+
+(define (square-x x)
+(* x x))
+
+(define (square-y y)
+(* y y))
+
+(define (sum-of-squares x y)
+(+ (square-x x) (square-y y)))
+
+;;4.5  Write a procedure to convert a temperature 
+from Fahrenheit to Celsius, and another to convert 
+in the other direction. The two formulas are 
+F=9/5C+32 and C=5/9(F-32).
+ 
+(define (fahrenheit-to-celsius x) 
+(/ (* 5 (- x 32)) 9))
+
+(define (celsius-to-fahrenheit x)
+(+ (/ (* 9 x) 5) 32)
+
+;;4.6  Define a procedure fourth that computes the 
+fourth power of its argument. Do this two ways, 
+first using the multiplication function, and then 
+using square and not (directly) using 
+multiplication.
+
+(define (fourth x) 
+(* x x x x))
+
+(define (square x)
+(* x x))
+
+(define (fourth x)
+(* (square x) (square x)))
+
+;;4.7  Write a procedure that computes the absolute 
+value of its argument by finding the square root of 
+the square of the argument.
+
+;; assuming square is already defined, unlike in my 
+previous answers...
+
+(define (absolute-value x)
+(sqrt (square x)))
+
+
+;;4.8  "Scientific notation" is a way to represent 
+very small or very large numbers by combining a 
+medium-sized number with a power of 10. For 
+example, 5×107 represents the number 50000000, 
+while 3.26×10-9 represents 0.00000000326 in 
+scientific notation. Write a procedure scientific 
+that takes two arguments, a number and an exponent 
+of 10, and returns the corresponding value:
+
+> (scientific 7 3)
+7000
+
+> (scientific 42 -5)
+0.00042
+
+
+
+;;My answer:
+
+(define (scientific x y)
+(* x (expt 10 y)))
+
+;;I'm just going to think a bit about how this 
+could be done:  (A harder problem for hotshots: Can 
+you write procedures that go in the other 
+direction? So you'd have
+
+> (sci-coefficient 7000)
+7
+
+> (sci-exponent 7000)
+3
+
+;;If coefficients could only be one digit, one 
+might use the 'first' procedure in sci-coefficient 
+and the rest as the sci-exponent. 
+
+4.9  Define a procedure discount that takes two 
+arguments: an item's initial price and a percentage 
+discount. It should return the new price:
+
+> (discount 10 5)
+9.50
+
+> (discount 29.90 50)
+14.95
+
+;;My answer:
+
+(define (percent x)
+(/ x 100))
+
+(define (discount x y)
+(- x (* x (percent y))))
+
+;; 4.10  Write a procedure to compute the tip you 
+should leave at a restaurant. It should take the 
+total bill as its argument and return the amount of 
+the tip. It should tip by 15%, but it should know 
+to round up so that the total amount of money you 
+leave (tip plus original bill) is a whole number of 
+dollars. (Use the ceiling procedure to round up.)
+
+> (tip 19.98)
+3.02
+
+> (tip 29.23)
+4.77
+
+> (tip 7.54)
+1.46
+
+;;my answer
+
+(define (tip x)
+(* 0.15 (ceiling x))
+
+;;could not check as for some reason ceiling is 
+unbound in my scheme interpreter. 
