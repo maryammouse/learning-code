@@ -1,0 +1,324 @@
+;;8.1  What does Scheme return as the value of each of the following expressions? Figure it out for yourself before you try it on the computer.
+
+> (every last '(algebra purple spaghetti tomato gnu))
+
+> (keep number? '(one two three four))
+
+> (accumulate * '(6 7 13 0 9 42 17))
+
+> (member? 'h (keep vowel? '(t h r o a t)))
+
+> (every square (keep even? '(87 4 7 12 0 5)))
+
+> (accumulate word (keep vowel? (every first '(and i love her))))
+
+> ((repeated square 0) 25)
+
+> (every (repeated bl 2) '(good day sunshine))
+
+;;(a e i o u)
+
+;;()
+
+;;0
+
+;;#f
+
+;;(16 144 0)
+
+;;ai
+
+;;0
+
+;;(go d sunshi)
+
+;;8.2  Fill in the blanks in the following Scheme interactions:
+
+> (______ vowel? 'birthday)
+IA
+
+;; keep
+
+> (______ first '(golden slumbers))
+(G S)
+
+;; every
+
+> (______ '(golden slumbers))
+GOLDEN
+
+;;first
+
+> (______ ______ '(little child))
+(E D)
+
+;;every last
+
+> (accumulate word (every last '(little child)))
+ED
+
+> (every + '(2 3 4 5))
+(2 3 4 5)
+
+> (accumulate + '(2 3 4 5))
+14
+
+;;8.3  Describe each of the following functions in English. Make sure to ;;include a description of the domain and range of each function. Be as ;;precise as possible; for example, "the argument must be a function of ;;one numeric argument" is better than "the argument must be a ;;function."
+
+(define (f a)
+  (keep even? a))
+
+;;the function takes an input and outputs a word made out of any even ;;numbers in the input.
+
+(define (g b)
+  (every b '(blue jay way)))
+
+;; This function takes a sentence (blue jay way) and applies the input, ;;a procedure b, to every word in the sentence.
+
+(define (h c d)
+  (c (c d)))
+
+;; The function takes an input procedure C and applies it to the input ;;d. It then applies c to the result.
+
+(define (i e)
+  (/ (accumulate + e) (count e)))
+
+accumulate
+
+;; accumulate takes a procedure and forms a word out of what the procedure produces.
+
+sqrt
+
+;; takes a value and multiplies it by itself.
+
+repeated
+
+;; repeated takes a numeric value and a procedure and repeats the procedure a number of times, depending on the numeric value.
+
+(repeated sqrt 3)
+
+;;Takes the square root of 3 and repeats it 3 times.
+(repeated even? 2)
+
+(repeated first 2)
+
+;;Takes the 'first' of a word or sentence, and outputs it twice.
+
+(repeated (repeated bf 3) 2)
+
+Takes the butfirst of a word/sentence 3 times, and repeats this process twice.
+
+;;8.4  Write a procedure choose-beatles that takes a predicate function ;;as its argument and returns a sentence of just those Beatles (John, ;;Paul, George, and Ringo) that satisfy the predicate. For example:
+
+;;(define (ends-vowel? wd) (vowel? (last wd)))
+
+;;(define (even-count? wd) (even? (count wd)))
+
+;;> (choose-beatles ends-vowel?)
+;;(GEORGE RINGO)
+
+;;> (choose-beatles even-count?)
+;;(JOHN PAUL GEORGE)
+
+
+(define (choose-beatles funct)
+(keep funct '(Paul George Ringo John)))
+
+;;8.5  Write a procedure transform-beatles that takes a procedure as an ;;argument, applies it to each of the Beatles, and returns the results ;;in a sentence:
+
+;;(define (amazify name)
+;;  (word 'the-amazing- name))
+;;> (transform-beatles amazify)
+;;(THE-AMAZING-JOHN THE-AMAZING-PAUL THE-AMAZING-GEORGE
+;; THE-AMAZING-RINGO)
+
+;;> (transform-beatles butfirst)
+;;(OHN AUL EORGE INGO)
+
+(define (transform-beatles funct)
+(every funct '(Paul George John Ringo)))
+
+;;8.6  When you're talking to someone over a noisy radio connection, you ;;sometimes have to spell out a word in order to get the other person to ;;understand it. But names of letters aren't that easy to understand ;;either, so there's a standard code in which each letter is represented ;;by a particular word that starts with the letter. For example, instead ;;of "B" you say "bravo."
+
+;;Write a procedure words that takes a word as its argument and returns ;;a sentence of the names of the letters in the word:
+
+;;> (words 'cab)
+;;(CHARLIE ALPHA BRAVO)
+;;(You may make up your own names for the letters or look up the ;;standard ones if you want.)
+
+;;Hint: Start by writing a helper procedure that figures out the name ;;for a single letter.
+
+(define (phonetic-alphabet letter)
+(cond ((equal? letter 'a) 'alpha)
+      ((equal? letter 'b) 'bravo)
+      ((equal? letter 'c) 'charlie)
+      ((equal? letter 'd) 'delta)
+      ((equal? letter 'e) 'echo)
+      ((equal? letter 'f) 'foxtrot)
+      ((equal? letter 'g) 'golf)
+      ((equal? letter 'h) 'hotel)
+      ((equal? letter 'i) 'india)
+      ((equal? letter 'j) 'juliet)
+      ((equal? letter 'k) 'kilo) 
+      ((equal? letter 'l) 'lima)
+      ((equal? letter 'm) 'maryam)
+      ((equal? letter 'n) 'novaria) 
+      ((equal? letter 'o) 'olivia) 
+      ((equal? letter 'p) 'princess)
+      ((equal? letter 'q) 'queen) 
+      ((equal? letter 'r) 'romeo) 
+      ((equal? letter 's) 'stallion) 
+      ((equal? letter 't) 'tango)
+      ((equal? letter 'u) 'uranium) 
+      ((equal? letter 'v) 'vienna)
+      ((equal? letter 'w) 'window)
+      ((equal? letter 'x) 'x-ray)
+      ((equal? letter 'y) 'yahoo!)
+      ((equal? letter 'z) 'zodiac)
+)
+)
+
+(define (words wd) 
+(every phonetic-alphabet wd))
+
+;;8.7  [14.5][9] Write a procedure letter-count that takes a sentence as ;;its argument and returns the total number of letters in the sentence:
+
+;;> (letter-count '(fixing a hole))
+;;11
+
+(define (letter-count wd) 
+(accumulate + (every count wd)))
+
+;;8.8  [12.5] Write an exaggerate procedure which exaggerates sentences:
+
+;;> (exaggerate '(i ate 3 potstickers))
+;;(I ATE 6 POTSTICKERS)
+
+;;> (exaggerate '(the chow fun is good here))
+;;(THE CHOW FUN IS GREAT HERE)
+;;It should double all the numbers in the sentence, and it should ;;replace "good" with "great," "bad" with "terrible," and anything else ;;you can think of.
+
+(define (adjective? wd)
+(member? wd '(good bad nice pretty ugly unhappy happy angry sad)))
+
+(define (extreme wd) 
+(cond ((equal? wd 'good) 'great)
+      ((equal? wd 'bad) 'terrible)
+      ((equal? wd 'nice) 'lovely)
+      ((equal? wd 'pretty) 'beautiful)
+      ((equal? wd 'ugly) '(really ugly))
+      ((equal? wd 'unhappy) 'depressed) 
+      ((equal? wd 'happy) 'delighted) 
+      ((equal? wd 'angry) 'furious)
+      ((or (equal? wd 'guilty) (equal? wd 'sad)) 'tormented)
+)
+)
+
+(define (exaggerate-word wd)
+(cond ((number? wd) (* 2 wd))
+      ((adjective? wd) (extreme wd))
+      (else wd)))
+
+(define (exaggerate wd)
+(every exaggerate-word wd))
+
+
+(define (exaggerate wd)
+(every (if (number? wd) (* 2 wd) (extreme wd)) wd))
+
+;;8.9  What procedure can you use as the first argument to every so that ;;for any sentence used as the second argument, every returns that ;;sentence?
+
+;;What procedure can you use as the first argument to keep so that for ;;any sentence used as the second argument, keep returns that sentence?
+
+;;What procedure can you use as the first argument to accumulate so that ;;for any sentence used as the second argument, accumulate returns that ;;sentence?
+
+;;8.10  Write a predicate true-for-all? that takes two arguments, a ;;predicate procedure and a sentence. It should return #t if the ;;predicate argument returns true for every word in the sentence.
+
+;;> (true-for-all? even? '(2 4 6 8))
+;;#T
+
+;;> (true-for-all? even? '(2 6 3 4))
+;;#F
+;;#f))
+
+(define (true-for-all? funct wd) 
+(if (equal? (keep funct wd) wd) '#t '#f))
+
+;;8.11  [12.6] Write a GPA procedure. It should take a sentence of grades ;;as its argument and return the corresponding grade point average:
+
+;;> (gpa '(A A+ B+ B))
+;;3.67
+
+;;Hint: write a helper procedure base-grade that takes a grade as ;;argument and returns 0, 1, 2, 3, or 4, and another helper procedure ;;grade-modifier that returns -.33, 0, or .33, depending on whether the ;;grade has a minus, a plus, or neither.
+
+
+(define (base-grade grade)
+(cond ((member? 'a grade) '4)
+      ((member? 'b grade) '3)
+      ((member? 'c grade) '2)
+      ((member? 'd grade) '1)
+      ((member? 'e grade) '0) 
+)
+)
+
+(define (grade-modifier grade) 
+(cond ((member? '+ grade) (+ .33 (base-grade grade)))
+      ((member? '- grade) (- (base-grade grade) .33))
+      (else (base-grade grade))))
+
+(define (gpa grades)
+(/ (accumulate + (every grade-modifier grades)) (count grades)))
+
+;;8.12  [11.2] When you teach a class, people will get distracted if you ;;say "um" too many times. Write a count-ums that counts the number of ;;times "um" appears in a sentence:
+
+;;> (count-ums
+;;   '(today um we are going to um talk about functional um programming))
+;;3
+
+(define (um wd) 
+(equal? wd 'um))
+
+(define (always-one thing) 1)
+
+(define (count-ums wd)
+(accumulate +  (every always-one (keep um wd))))
+
+;;8.13  [11.3] Write a procedure phone-unspell that takes a spelled ;;version of a phone number, such as POPCORN, and returns the real phone ;;number, in this case 7672676. You will need to write a helper procedure ;;that uses an 8-way cond expression to translate a single letter into a ;;digit.
+
+(define (phone-code letter)
+(cond ((or (equal? letter 'a) (equal? letter 'b) (equal? letter 'c)) '2)
+      ((or (equal? letter 'd) (equal? letter 'e) (equal? letter 'f)) '3)
+      ((or (equal? letter 'g) (equal? letter 'h) (equal? letter 'i)) '4)
+      ((or (equal? letter 'j) (equal? letter 'k) (equal? letter 'l)) '5)
+      ((or (equal? letter 'm) (equal? letter 'n) (equal? letter 'o)) '6)
+      ((or (equal? letter 'p) (equal? letter 'q) (equal? letter 'r) 
+
+(equal? letter 's)) '7)
+      ((or (equal? letter 't) (equal? letter 'u) (equal? letter 'v)) '8)
+      ((or (equal? letter 'w) (equal? letter 'x) (equal? letter 'y) 
+
+(equal? letter 'z)) '9)
+(else 'undefined)
+)
+)
+
+(define (phone-unspell wd)
+(keep number? (every phone-code wd))
+)
+
+
+
+;;8.14
+
+(define (bfn num wd)
+.. ((repeated bf (- num 1)) wd))
+bfn
+
+(define (bln num wd)
+.. ((repeated bl (- (count wd) num)) wd))
+bln
+
+(define (subword wd num1 num2)
+.. (bfn num1 (bln num2 wd)))
+subword
+

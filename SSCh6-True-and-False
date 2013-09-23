@@ -1,0 +1,308 @@
+;;6.1  What values are printed when you type these expressions to Scheme? ;;(Figure it out in your head before you try it on the computer.)
+
+(cond ((= 3 4) '(this boy))
+      ((< 2 5) '(nowhere man))
+      (else '(two of us)))
+
+(cond (empty? 3)
+      (square 7)
+      (else 9))
+
+(define (third-person-singular verb)
+  (cond ((equal? verb 'be) 'is)
+        ((equal? (last verb) 'o) (word verb 'es))
+        (else (word verb 's))))
+
+(third-person-singular 'go)
+
+;;nowhere man
+;;9
+;;goes
+
+
+;;6.2  What values are printed when you type these expressions to Scheme? ;;(Figure it out in your head before you try it on the computer.)
+
+(or #f #f #f #t)
+
+(and #f #f #f #t)
+
+(or (= 2 3) (= 4 3))
+
+(not #f)
+
+(or (not (= 2 3)) (= 4 3))
+
+(or (and (= 2 3) (= 3 3)) (and (< 2 3) (< 3 4)))
+
+;; #t
+
+;; #f
+
+;; #f
+
+;; #t
+
+;; #t
+
+;; #t
+
+
+;;6.3  Rewrite the following procedure using a cond instead of the ifs:
+
+(define (sign number)
+  (if (< number 0)
+      'negative
+      (if (= number 0)
+	  'zero
+	  'positive)))
+
+;; My answer
+
+(define (sign number)
+(cond ((< number 0) 'negative)
+      ((= number 0) 'zero)
+      (else 'positive)))
+
+;;6.4  Rewrite the following procedure using an if instead of the cond:
+
+(define (utensil meal)
+  (cond ((equal? meal 'chinese) 'chopsticks)
+	(else 'fork)))
+
+;; My answer
+
+(define (utensil meal) 
+     (if (equal? meal 'chinese) 
+          'chopsticks
+          'fork))
+
+;;6.5  Write a procedure european-time to convert a time from American ;;AM/PM notation into European 24-hour notation. Also write american-time, ;;which does the opposite:
+
+> (european-time '(8 am))
+8
+
+;;> (european-time '(4 pm))
+;;16
+
+;;> (american-time 21)
+;;(9 PM)
+
+;;> (american-time 12)
+;;(12 PM)
+
+;;> (european-time '(12 am))
+;;24
+
+;; My answer
+
+
+(define (european-time time)  
+    (cond ((or (< (first time) 0) (> (first time) 12)) '(not possible, sorry!)) 
+          ((and (equal? (first time) '12) (equal? (last time) 'am))  '0)
+          ((and (equal? (first time) '12) (equal? (last time) 'pm))  '12)
+          ((equal? (last time) 'am) (first time))
+          ((equal? (last time) 'pm) (+ (first time) 12))
+      
+          ))
+          
+
+(define (american-time time)
+    (cond ((or (< time 0) (> time 23)) '(not possible, sorry!))
+          ((equal? time 12) (12 pm))
+          ((equal? time 0) (12 am))
+          ((< time 12) (se time 'am))
+          ((> time 12) (se (- time 12) 'pm)
+
+          ))
+
+;;6.6  Write a predicate teen? that returns true if its argument is ;;between 13 and 19.
+
+;;My answer
+
+(define (teen? age)
+(if (and (> age 12) (< age 20))
+       'true
+       'false)
+
+;;6.7  Write a procedure type-of that takes anything as its argument and ;;returns one of the words word, sentence, number, or boolean:
+
+;;> (type-of '(getting better))
+;;SENTENCE
+
+;;> (type-of 'revolution)
+;;WORD
+
+;;> (type-of (= 3 3))
+;;BOOLEAN
+
+;;My answer
+
+(define (type-of form)
+(cond 
+       ((equal? form word) 'word) 
+       ((equal? form sentence) 'sentence)
+       (else '?))
+
+;;unfinished because i got stuck :(
+
+
+;;6.8  Write a procedure indef-article that works like this:
+
+;;> (indef-article 'beatle)
+;;(A BEATLE)
+
+;;> (indef-article 'album)
+;;(AN ALBUM)
+
+
+;; My answer
+
+(define (indef-article thing)
+(if (member? (first thing) '(a e i o u)) 
+      (se 'an thing)
+      (se 'a thing)))
+    
+;;6.9  Sometimes you must choose the singular or the plural of a word: 1 ;;book but 2 books. Write a procedure thismany that takes two arguments, ;;a number and a singular noun, and combines them appropriately:
+
+;;> (thismany 1 'partridge)
+;;(1 PARTRIDGE)
+
+;;> (thismany 3 'french-hen)
+;;(3 FRENCH-HENS)   
+
+;; My answer
+
+(define (plural wd)
+    (if (equal? (last wd) 'y) 
+       (word (butlast wd) 'ies)
+       (word wd 's)))
+
+(define (thismany number singlething)
+ (cond ((< number 0) (sentence 'not 'possible, 'sorry!))
+       ((= number 1) (sentence number singlething))
+       (else (sentence number (plural singlething)))))
+
+;;6.10  Write a procedure sort2 that takes as its argument a sentence ;;containing two numbers. It should return a sentence containing the same ;;two numbers, but in ascending order:
+
+;;> (sort2 '(5 7))
+;;(5 7)
+
+;;> (sort2 '(7 5))
+;;(5 7)
+
+;; My answer
+
+(define (sort2 x y)
+ (if (> x y) 
+     (sentence y x)
+     (sentence x y)
+ )
+ )
+
+;;6.11  Write a predicate valid-date? that takes three numbers as ;;arguments, representing a month, a day of the month, and a year. Your ;;procedure should return #t if the numbers represent a valid date (e.g., ;;it isn't the 31st of September). February has 29 days if the year is ;;divisible by 4, except that if the year is divisible by 100 it must ;;also be divisible by 400.
+
+;; > (valid-date? 10 4 1949)
+;;#T
+
+;;> (valid-date? 20 4 1776)
+;;#F
+
+;;> (valid-date? 5 0 1992)
+;;#F
+
+;;> (valid-date? 2 29 1900)
+;;#F
+
+;;> (valid-date? 2 29 2000)
+;;#T
+
+;;My answer
+
+(define (valid-date? x y z)
+(cond 
+      ((and (equal? (modulo z 400) 0)  (equal? x 2) (< y 30))
+          'true) 
+      ((and (equal? x 2) (not (equal? (modulo z 400) 0)) (< y 29))
+           'true)
+      ((and (or (equal? 1 x) (equal? 3 x) (equal? 5 x) (equal? 7 x) (equal? 8 x) (equal? 10 x) (equal? 12 x)) (< y 32))
+          'true)
+      ((and (or (equal? 4 x) (equal? 6 x) (equal? 9 x) (equal? 11 x)) (< y 31))
+           'true)
+       (else 'false)))
+
+;;6.12  Make plural handle correctly words that end in y but have a vowel ;;before the y, such as boy. Then teach it about words that end in x ;;(box). What other special cases can you find?
+
+;;My answer
+
+(define (plural wd) 
+(cond ((and (equal? (last wd) 'y) (equal? (last (butlast wd)) 'o)
+      (word wd 's)))
+      ((equal? (last wd) 'y)
+      (word (butlast wd) 'ies))
+      (else (word wd 's))))
+
+;;6.13  Write a better greet procedure that understands as many different ;;kinds of names as you can think of:
+
+;;> (greet '(john lennon))
+;;(HELLO JOHN)
+
+;;> (greet '(dr marie curie))
+;;(HELLO DR CURIE)
+
+;;> (greet '(dr martin luther king jr))
+;;(HELLO DR KING)
+
+;;> (greet '(queen elizabeth))
+;;(HELLO YOUR MAJESTY)
+
+;;> (greet '(david livingstone))
+;;(DR LIVINGSTONE I PRESUME?)
+
+;;My answer
+
+(define (greet name)
+ (cond ((and (or (equal? (last name) 'jr) (equal? (last name) 'junior)) (or (equal? (first name) 'dr) (equal? (first name) 'doctor)))
+      (sentence 'Hello 'dr (last (butlast name))))
+      ((or (equal? (first name) 'dr) (equal? (first name) 'doctor))
+      (sentence 'Hello (first name) (last name)))
+      ((or (equal? (last name) 'livingstone)) 
+       (sentence 'dr (last name) 'I 'presume?))
+      ((equal? (first name) 'queen)
+       (sentence 'Hello 'your 'Majesty))
+      ((equal? (first name) 'Maryam)
+       (sentence 'Hiya (first name) 'Mouse!))
+      ((equal? (last name) 'Bond)
+       (sentence 'Hello 'Mr (last name)))
+      ((equal? (first name) 'Agent) 
+       (sentence 'Greetings 'Agent (last name)))
+      (else (sentence 'Hello (first name)))))
+
+;;6.14  Write a procedure describe-time that takes a number of seconds as ;;its argument and returns a more useful description of that amount of ;;time:
+
+;;> (describe-time 45)
+;;(45 SECONDS)
+
+;;> (describe-time 930)
+;;(15.5 MINUTES)
+
+;;> (describe-time 30000000000)
+;;(9.506426344208686 CENTURIES)
+
+;;My answer
+
+(define (describe-time seconds)
+ (cond 
+      ((< seconds 60) (sentence seconds 'second/s))
+      ((or (equal? seconds 60) (and (< seconds 3600) (> seconds 60)))(sentence (/ seconds 60) 'minute/s))
+      ((or (equal? seconds 3600) (and (< seconds 86400) (> seconds 3600))) (sentence (/ seconds 3600) 'hour/s))
+      ((or (equal? seconds 86400) (and (< seconds 604800) (> seconds 86400))) (sentence (/ seconds 86400) 'day/s))
+      ((or (equal? seconds 604800) (and (< seconds 2629740) (> seconds 604800))) (sentence (/ seconds 604800) 'week/s))
+      ((or (equal? seconds 2629740) (and (< seconds 31560000) (> seconds 2629740))) (sentence (/ seconds 2629740) 'month/s))
+      ((or (equal? seconds 31560000) (and (< seconds 315600000) (> seconds 31560000))) (sentence (/ seconds 31560000) 'year/s))
+      ((or (equal? seconds 315600000) (and (< seconds 3156000000) (> seconds 315600000))) (sentence (/ seconds 315600000) 'decade/s))
+         ((or (equal? seconds 3156000000) (> seconds 315600000)) (sentence (/ seconds 3156000000) 'century/ies))
+      
+  )
+  )
+          
+    

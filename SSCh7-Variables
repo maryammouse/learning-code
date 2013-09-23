@@ -1,0 +1,38 @@
+(define (gertrude wd)
+.. (let ((article (if (vowel? (first wd)) 'an 'a)))
+.. (se article wd 'is article wd 'is article wd))
+.. )
+
+(let ((pi '3.14159)
+..      (pie '(lemon meringue)))
+.. (se 'pi 'is pi 'but 'pie 'is pie))
+
+;;7.3  The following program doesn't work. Why not? Fix it.
+
+(define (superlative adjective word)
+  (se (word adjective 'est) word))
+
+;;It's supposed to work like this:
+
+> (superlative 'dumb 'exercise)
+(DUMBEST EXERCISE)
+
+;;my answer
+
+;;It doesn't work because one of the 'variables' has the same name as a ;;procedure.
+
+(define (superlative adjective wd)  
+ (se (word adjective 'est) wd))
+
+;;that works.
+
+;;7.4  What does this procedure do? Explain how it manages to work.
+
+(define (sum-square a b)
+  (let ((+ *)
+        (* +))
+    (* (+ a a) (+ b b))))
+
+;;my answer
+
+;;it works because it makes + equal to * and * equal to +.

@@ -1,0 +1,240 @@
+;; Taken from the interpreter as I learned this material and tried out what the book suggested:
+;;JS-SCHEME - 0.4b STk-1.0 - March 28 2013
+;;Welcome to JS-SCHEME!
+;;An extension of js-scheme that matches STk scheme functionality. 
+;;Original js-scheme by Erik Silkensen 
+;;Extensions by Pierre Karashchuk.
+;;Enter (help) for more information.
+> (word 'ses 'qui 'pe 'da 'lian 'ism)
+sesquipedalianism
+> (bf '(sexy sadie))
+(sadie)
+> (first (bf '(sexy sadie))
+.. )
+sadie
+> (sentence 'I '(me mine))
+(i me mine)
+> (sentence '() '(is empty))
+(is empty)
+> (word '23 '45)
+2345
+> (bf 'a)
+""
+> (bf '(aye))
+()
+> (count (first '(maggie mae))
+.. )
+6
+> (se """ '() "" '()))
+;ParseWarning: unbalanced parens
+> )
+;ParseWarning: unbalanced parens
+> )
+;ParseWarning: unbalanced parens
+> (se "" '() "" '())
+("" "")
+> (count ("se "" '() "" '()))
+;Stack Trace: 
+0    UnboundVariableError: "
+1    "
+2    ("se " " '() " " (quote ()))
+3    (count ("se " " '() " " (quote ())))
+> (count (se "" '() "" '()))
+2
+> (fl '(a b c) '(d e f))
+;Stack Trace: 
+0    UnboundVariableError: fl
+1    fl
+2    (fl (quote (a b c)) (quote (d e f)))
+> (define (f1 '( a b c) '(d e f)
+.. (se (bf '(a b c)) (bl '(d e f))))
+.. )
+;Stack Trace: 
+0    Ill-formed special form: (define (f1 (quote (a b c)) (quote (d e f)) (se (bf (quote (a b c))) (bl (quote (d e f))))))
+1    (define (f1 (quote (a b c)) (quote (d e f)) (se (bf (quote (a b c))) (bl (quote (d e f))))))
+> (define (f1 x y)
+.. (se (bf '(a b c)) )))
+;ParseWarning: unbalanced parens
+> )
+;ParseWarning: unbalanced parens
+> (define (f1 a b c d e f)
+.. (se (bf '(a b c)) (bl '(d e f))))
+f1
+> (f1 '(a b c) '(d e f))
+;Stack Trace: 
+0    IllegalArgumentError: The procedure #<compound-procedure> has been called with 2 arguments; it requires exactly 6 arguments.
+1    (f1 (quote (a b c)) (quote (d e f)))
+> (define f1 x y)
+;Stack Trace: 
+0    UnboundVariableError: x
+1    x
+2    (define f1 x y)
+> (define (f1 x y)
+.. (se (bf 'x) (bl 'y)))
+f1
+> (f1 '(a b c) '(d e f))
+("" "")
+> (bf '(a b c)
+.. )
+(b c)
+> 
+> (bl '(d e f))
+(d e)
+> (se (bf '(a b c)) (bl '(d e f)))
+(b c d e)
+> (define (f1 'x 'y)
+.. (se (bf 'x) (bl 'y)))
+;Stack Trace: 
+0    Ill-formed special form: (lambda ((quote x) (quote y)) (se (bf (quote x)) (bl (quote y))))
+1    (lambda ((quote x) (quote y)) (se (bf (quote x)) (bl (quote y))))
+2    (define (f1 (quote x) (quote y)) (se (bf (quote x)) (bl (quote y))))
+> (define (f1 '(x) '(y))
+.. (se (bf '(x)) (bl '(y)))
+.. )
+;Stack Trace: 
+0    Ill-formed special form: (lambda ((quote (x)) (quote (y))) (se (bf (quote (x))) (bl (quote (y)))))
+1    (lambda ((quote (x)) (quote (y))) (se (bf (quote (x))) (bl (quote (y)))))
+2    (define (f1 (quote (x)) (quote (y))) (se (bf (quote (x))) (bl (quote (y)))))
+> (define (f1 x y)
+.. (se '()))
+f1
+> )
+;ParseWarning: unbalanced parens
+> (
+.. )
+()
+> (define (f1 sentence-1 sentence-2)
+.. (se (bf '(sentence-1)) (bl '(sentence-2))))
+f1
+> (f1 '(a b c) '(d e f))
+()
+> (define (f1 sentence-1 sentence-2)
+.. (se (bf sentence-1) (bl sentence-2)))
+f1
+> (f1 '(a b c) '(d e f))
+(b c d e)
+> (define (f2 (a b c) '(d e f)
+.. (faiiilll)))
+;Stack Trace: 
+0    Ill-formed special form: (define (f2 (a b c) (quote (d e f)) (faiiilll)))
+1    (define (f2 (a b c) (quote (d e f)) (faiiilll)))
+> (define (f2 sentence-1 sentence-2)
+.. (se (bf sentence-1) (bl sentence-2) (word (first sentence-1) (last sentence-2))))
+f2
+> (f2 '(a b c) '(d e f))
+(b c d e af)
+> (define (f3 sentence-1 sentence-2)
+.. (se sentence-1 sentence-1))
+f3
+> (f3 '(a b c) '(d e f))
+(a b c a b c)
+> (define (f4 sentence-1 sentence-2)
+.. (word (item 2 sentence-1) (item 2 sentence-2)))
+f4
+> (f4 '(a b c) '(d e f))
+be
+
+;;Real Exercises
+
+;;5.13  What does '?'banana stand for?
+
+;; It stands for (quote banana)
+
+;;What is (first '?'banana) and why?
+
+;; It is (quote) because the first ' stands for the word quote.
+
+;;5.14  Write a procedure third that selects the third letter of a word (or the third word of a sentence).
+
+
+;;5.15   Write a procedure first-two that takes a word as its argument, returning a two-letter word containing the first two letters of the argument.
+
+> (first-two 'ambulatory)
+AM
+
+
+
+(define (first-two wd)               ;;my answer
+(word (first wd) (first (bf wd))))
+
+;;5.16  Write a procedure two-first that takes two words as arguments, returning a two-letter word containing the first letters of the two arguments.
+
+> (two-first 'brian 'epstein)
+BE
+
+(define (two-first wd-1 wd-2)
+(word (first wd-1) (first wd-2)))
+
+;;Now write a procedure two-first-sent that takes a two-word sentence as argument, returning a two-letter word containing the first letters of the two words.
+
+> (two-first-sent '(brian epstein))
+BE
+
+(define (two-first-sent two-wd-sentence)                 		;; my answer
+(word (first (first two-wd-sentence)) (first (last two-wd-sentence))))
+
+;; 5.17  Write a procedure knight that takes a person's name as its argument and returns the name with "Sir" in front of it.
+
+> (knight '(david wessel))
+(SIR DAVID WESSEL)
+
+(define (knight name)
+(se 'Sir name))
+
+
+(define (noblewoman name)   ;;for fun 
+(se 'Lady name))
+
+(define (nobleman name)
+(se 'Lord name))
+
+;;5.18  Try the following and explain the result:
+
+(define (ends word)
+  (word (first word) (last word)))
+
+> (ends 'john)
+
+;; The problem here is that the variable name is identical to the procedure name and the interpreter reads the variable (word) as the procedure word and returns an error message.
+
+;;5.19  Write a procedure insert-and that takes a sentence of items and returns a new sentence with an "and" in the right place:
+
+> (insert-and '(john bill wayne fred joey))
+(JOHN BILL WAYNE FRED AND JOEY)
+
+;;my answer: 
+
+(define (insert-and sentence-1)
+(se (bl sentence-1) 'and (last sentence-1)))
+
+;;5.20  Define a procedure to find somebody's middle names:
+
+> (middle-names '(james paul mccartney))
+(PAUL)
+
+> (middle-names '(john ronald raoul tolkien))
+(RONALD RAOUL)
+
+> (middle-names '(bugs bunny))
+()
+
+> (middle-names '(peter blair denis bernard noone))
+(BLAIR DENIS BERNARD)
+
+;;my answer: 
+
+(define (middle-names name)
+(bl (bf name)))
+
+;;5.21  Write a procedure query that turns a statement into a question by swapping the first two words and adding a question mark to the last word:
+
+> (query '(you are experienced))
+(ARE YOU EXPERIENCED?)
+
+> (query '(i should have known better))
+(SHOULD I HAVE KNOWN BETTER?)
+
+;;my answer: 
+
+(define (query statement)
+(se (item 2 statement) (item 1 statement) (bl (bf (bf statement))) (word (last statement) '?))
